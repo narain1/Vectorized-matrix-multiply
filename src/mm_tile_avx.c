@@ -4,7 +4,8 @@
 #include <immintrin.h>
 
 #define n 4096
-#define sz 4
+#define sz 8
+
 
 float reduce_vector8_0(__m256 v) {
   __m128 v1 = _mm256_extractf128_ps(v, 0);
@@ -28,25 +29,32 @@ float reduce_vector8_1(__m256 v) {
 
 
 void matrix_multiply_avx2(float *A, float *B, float *C) {
-    const int ncols8 = n & ~7;
+  const int ncols8 = n & ~7;
 
-    for (int i =0; i < n; i++) {
-      for (int j=0; j<ncols8; j++) {
-        __m256 sum = _mm256_setzero_ps();
-        for (int k=0; k<n; k+=8) {
-          __m256 a = _mm256_loadu_ps(A + i * n + k);
-          __m256 b = _mm256_loadu_ps(B + j * n + k);
-          __m256 c = _mm256_mul_ps(a, b);
-          sum = _mm256_add_ps(sum, c);
-        }
-        C[i] = reduce_vector8_1(sum);
+  for (int i =0; i<n; i += sz) {
+    for (int j=0; j<n; j += sz) {
+      for (int k=0; k<n; k += sz) {
+        for (int ii=i; ii < i+sz; ii++) {
+          for (int jj=j; jj< j+sz; jj++) {
+            __m256 sum = _mm256_setzero_ps();
+            for (int kk=k; kk < k+sz; k+=8) {
+              __m256 a = _mm256_loadu_ps(A + ii * n + kk);
+              __m256 b = _mm256_loadu_ps(B + jj * n + kk);
+              __m256 c = _mm256_mul_ps(a, b);
+              sum = _mm256_add_ps(sum, c);
+            }
+            C[i] = reduce_vector8_1(sum);
 
-        for (int j=ncols8; j<n; j++) {
-          C[i] += A[i * n + j]* B[j];
+            for (int j=ncols8; j<n; j++) {
+            C[i] += A[i * n + j]* B[j];
+            }
+          }
         }
       }
     }
+  }
 }
+
 
 int main() {
   time_t t;

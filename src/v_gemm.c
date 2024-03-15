@@ -21,9 +21,9 @@ int main() {
   struct timespec begin, end;
   clock_gettime(CLOCK_MONOTONIC_RAW, &begin);
 
+  #pragma omp parallel for private(i,j,k) shared(a,b,c)
   for(int i=0; i<n; i++) 
     for(int j=0; j<n; j++)
-      #pragma omp parallel for
       for(int k=0; k<n; k++)
         c[i][j] += a[i][k] * a[k][j];
 
