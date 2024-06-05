@@ -1,5 +1,5 @@
 import ctypes
 
-lib = ctypes.CDLL("na.so")
+lib = ctypes.CDLL("./lib.so")
 
 print("loaded lib")
