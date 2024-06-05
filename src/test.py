@@ -24,6 +24,12 @@ lib.mm_threads.argtypes = [np.ctypeslib.ndpointer(dtype=np.float32, ndim=2, flag
                          ctypes.c_int]
 lib.mm_threads.restype = None
 
+lib.mm_tiled_omp.argtypes = [np.ctypeslib.ndpointer(dtype=np.float32, ndim=2, flags='C_CONTIGUOUS'),
+                         np.ctypeslib.ndpointer(dtype=np.float32, ndim=2, flags='C_CONTIGUOUS'),
+                         np.ctypeslib.ndpointer(dtype=np.float32, ndim=2, flags='C_CONTIGUOUS'),
+                         ctypes.c_int]
+lib.mm_tiled_omp.restype = None
+
 # Initialize matrices
 n = 1024
 a = np.random.randn(n, n).astype(np.float32)
@@ -45,6 +51,12 @@ print("time taken mm transpose: ", end - start)
 
 start = time.perf_counter()
 lib.mm_threads(a, b, c, n)
+end = time.perf_counter()
+
+print("time taken mm threads: ", end - start)
+
+start = time.perf_counter()
+lib.mm_tiled_omp(a, b, c, n)
 end = time.perf_counter()
 
 print("time taken mm threads: ", end - start)
