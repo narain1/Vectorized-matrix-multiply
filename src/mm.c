@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <omp.h>
 
-#define TILE_SIZE 16  // Define the size of the tile
+#define TILE_SIZE 8  // Define the size of the tile
 
 void mm_naive(float *a, float *b, float *c, int n)
 {
@@ -23,7 +23,8 @@ void mm_transpose(float *a, float *b, float *c, int n)
 void mm_threads(float *a, float *b, float *c, int n)
 {
   int i,j,k;
-  #pragma omp parallel for private(i,j,k) shared(a,b,c)
+  // #pragma omp parallel for private(i,j,k) shared(a,b,c)
+  #pragma omp parallel for collapse(2) if (n * n * n > 300000)
   for(i=0; i < n; i++)
     for (k=0; k< n; k++)
       for (j=0; j< n; j++)
