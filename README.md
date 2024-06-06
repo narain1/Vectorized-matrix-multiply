@@ -2,10 +2,13 @@
 
 ## naive implementation
 
-o0 optimization 168.695055 seconds
-o1 optimization 88.203721 seconds
-o2 optimization 21.618243 seconds
-o3 optimization 22.122448 seconds
+|    | method       |    timings |
+|---:|:-------------|-----------:|
+|  0 | mm_naive     | 2.10668    |
+|  1 | mm_transpose | 0.0620781  |
+|  2 | mm_threads   | 0.00546967 |
+|  3 | mm_tiled_omp | 0.0728909  |
+|  4 | mm_vector    | 0.215865   |
 
 # Optimized Matrix Multiplication
 
@@ -23,10 +26,6 @@ The repository includes multiple C programs, each demonstrating a unique optimiz
 ## Compilation
 
 Each program can be compiled with `gcc` or any compatible C compiler. It is crucial to enable optimizations and, where applicable, specify the target architecture to support AVX2 instructions. An example compilation command for an AVX2-enabled program is:
-
-```bash
-gcc -O3 -mavx2 -fopenmp program_name.c -o program_name
-```
 
 ## Dependencies
 
