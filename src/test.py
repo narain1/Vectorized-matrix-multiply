@@ -1,6 +1,7 @@
 import ctypes
 import numpy as np
 import time
+import pandas as pd
 
 # Load the shared library
 lib = ctypes.CDLL('./lib.so')
@@ -32,31 +33,17 @@ lib.mm_tiled_omp.restype = None
 
 # Initialize matrices
 n = 1024
-a = np.random.randn(n, n).astype(np.float32)
-b = np.random.randn(n, n).astype(np.float32)
-c = np.zeros((n, n), dtype=np.float32)
 
-# Call the function
-start = time.perf_counter()
-lib.mm_naive(a, b, c, n)
-end = time.perf_counter()
+ops = ['mm_naive', 'mm_transpose', 'mm_threads', 'mm_tiled_omp']
+time_acc = []
+for op in ops:
+    a = np.random.randn(n, n).astype(np.float32)
+    b = np.random.randn(n, n).astype(np.float32)
+    c = np.zeros((n, n), dtype=np.float32)
 
-print("time taken mm_naive : ", end - start)
+    start = time.perf_counter()
+    getattr(lib, op)(a, b, c, n)
+    end = time.perf_counter()
+    time_acc.append(end - start)
 
-start = time.perf_counter()
-lib.mm_transpose(a, b, c, n)
-end = time.perf_counter()
-
-print("time taken mm transpose: ", end - start)
-
-start = time.perf_counter()
-lib.mm_threads(a, b, c, n)
-end = time.perf_counter()
-
-print("time taken mm threads: ", end - start)
-
-start = time.perf_counter()
-lib.mm_tiled_omp(a, b, c, n)
-end = time.perf_counter()
-
-print("time taken mm threads: ", end - start)
+pd.DataFrame({'method': ops, 'timings': time_acc}).to_markdown('../benchmark.md')
