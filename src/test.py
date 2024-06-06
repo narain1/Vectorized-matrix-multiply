@@ -46,4 +46,6 @@ for op in ops:
     end = time.perf_counter()
     time_acc.append(end - start)
 
-pd.DataFrame({'method': ops, 'timings': time_acc}).to_markdown('../benchmark.md')
+table = pd.DataFrame({'method': ops, 'timings': time_acc})
+table.to_markdown('../benchmark.md')
+print(table)
