@@ -31,10 +31,16 @@ lib.mm_tiled_omp.argtypes = [np.ctypeslib.ndpointer(dtype=np.float32, ndim=2, fl
                          ctypes.c_int]
 lib.mm_tiled_omp.restype = None
 
+lib.mm_vector.argtypes = [np.ctypeslib.ndpointer(dtype=np.float32, ndim=2, flags='C_CONTIGUOUS'),
+                         np.ctypeslib.ndpointer(dtype=np.float32, ndim=2, flags='C_CONTIGUOUS'),
+                         np.ctypeslib.ndpointer(dtype=np.float32, ndim=2, flags='C_CONTIGUOUS'),
+                         ctypes.c_int]
+lib.mm_vector.restype = None
+
 # Initialize matrices
 n = 1024
 
-ops = ['mm_naive', 'mm_transpose', 'mm_threads', 'mm_tiled_omp']
+ops = ['mm_naive', 'mm_transpose', 'mm_threads', 'mm_tiled_omp', 'mm_vector']
 time_acc = []
 for op in ops:
     a = np.random.randn(n, n).astype(np.float32)
