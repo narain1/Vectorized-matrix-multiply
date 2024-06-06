@@ -1,39 +1,35 @@
-# Vectorized-matrix-multiply
-
-## naive implementation
-
-|    | method       |    timings |
-|---:|:-------------|-----------:|
-|  0 | mm_naive     | 2.10668    |
-|  1 | mm_transpose | 0.0620781  |
-|  2 | mm_threads   | 0.00546967 |
-|  3 | mm_tiled_omp | 0.0728909  |
-|  4 | mm_vector    | 0.215865   |
-
 # Optimized Matrix Multiplication
 
-This repository contains various implementations of matrix multiplication, showcasing the performance improvements achievable through different optimization techniques. These optimizations include the use of AVX2 intrinsics, loop tiling, and parallel processing with OpenMP. The aim is to demonstrate how these methods can significantly reduce computation time for large-scale matrix multiplication tasks.
+This repository showcases various implementations of matrix multiplication, each demonstrating significant performance improvements through different optimization techniques. These methods include vectorized computations using AVX2 intrinsics, loop tiling to enhance cache efficiency, and parallel processing with OpenMP. The goal is to highlight how these optimizations can dramatically reduce computation times in large-scale matrix multiplication tasks.
 
 ## Repository Structure
 
-The repository includes multiple C programs, each demonstrating a unique optimization strategy:
+The repository contains multiple C programs, each tailored to demonstrate a specific optimization technique:
 
-- **AVX2 Optimized Matrix Multiplication**: Utilizes AVX2 intrinsics to perform efficient vectorized multiplication of floating-point numbers.
-- **Basic Matrix Multiplication with Loop Tiling**: Implements loop tiling (also known as loop blocking) to improve cache utilization and reduce memory access latency.
-- **Parallel Matrix Multiplication with OpenMP**: Leverages OpenMP to parallelize the computation, distributing the workload across multiple CPU cores.
-- **Reduced Vector Operations**: Showcases two methods for summing elements within an AVX2 vector, further optimizing the vectorized approach.
+- **AVX2 Optimized Matrix Multiplication:** Utilizes AVX2 intrinsics to perform efficient vectorized multiplication of floating-point numbers, significantly speeding up operations by leveraging SIMD (Single Instruction Multiple Data) capabilities.
+- **Basic Matrix Multiplication with Loop Tiling:** Implements loop tiling (also known as loop blocking) to enhance cache utilization, which helps to minimize memory access latency and improve execution speed.
+- **Parallel Matrix Multiplication with OpenMP:** Employs OpenMP to parallelize computation across multiple CPU cores, effectively distributing the workload to accelerate processing.
+- **Reduced Vector Operations:** Features methods for efficiently summing elements within an AVX2 vector, optimizing the computational throughput of vectorized operations.
 
 ## Compilation
 
-Each program can be compiled with `gcc` or any compatible C compiler. It is crucial to enable optimizations and, where applicable, specify the target architecture to support AVX2 instructions. An example compilation command for an AVX2-enabled program is:
+Each program should be compiled using `gcc` or a compatible C compiler. It's essential to activate compiler optimizations and, where relevant, specify the target architecture to incorporate AVX2 instructions, ensuring the best possible performance.
+
+### Example Compilation Command
+
+```bash
+gcc -O3 -mavx2 -fopenmp program_name.c -o program_name
+```
+
+This command compiles a program enabling Level 3 optimizations (`-O3`), AVX2 instructions (`-mavx2`), and OpenMP support (`-fopenmp`).
 
 ## Dependencies
 
-* A C compiler such as gcc supporting C99 or later.
-* Hardware support for AVX2 instructions for certain programs.
-* OpenMP for parallel execution in applicable programs.
+- **C Compiler:** gcc or another compiler supporting C99 or later.
+- **AVX2 Support:** Hardware that supports AVX2 instructions is required for certain programs to run.
+- **OpenMP:** Necessary for the execution of parallelized programs.
 
 ## Performance Measurement
 
-Each program measures execution time using high-resolution clocks. The results are printed to stdout in seconds, allowing for easy comparison between the different optimization techniques.
+Execution times for each program are measured using high-resolution clocks, and results are output to the standard output (stdout) in seconds. This setup allows for straightforward comparisons between different optimization techniques, providing clear insights into the efficiency gains possible with each approach.
 
