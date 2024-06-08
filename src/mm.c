@@ -66,8 +66,8 @@ void mm_tiled_omp(float *a, float *b, float *c, int n)
 
 void mm_vector(float *a, float *b, float *c, int n)
 {
+  #pragma omp parallel for collapse(2) if (n * n * n > 300000)
   for (int i=0; i<n; ++i) {
-    #pragma unroll
     for (int j=0; j<n; ++j) {
       __m256 sum = _mm256_setzero_ps();
       for (int k=0; k<n; k+= 8) {
@@ -75,7 +75,11 @@ void mm_vector(float *a, float *b, float *c, int n)
         __m256 vecB = _mm256_loadu_ps(&b[k * n + j]);
         sum = _mm256_fmadd_ps(vecA, vecB, sum);
       }
-      c[i * n + j] = hsum(sum);
+      sum = _mm256_hadd_ps(sum, sum);
+      sum = _mm256_hadd_ps(sum, sum);
+      float buffer[8];
+      _mm256_storeu_ps(buffer, sum);
+      c[i * n + j] = buffer[0] + buffer[6];
     }
   }
 }
